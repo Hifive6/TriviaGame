@@ -66,11 +66,29 @@ function myFunction() {
     } else {
         beginGame.style.display = "none";
     }
-    //this is just a test, i will replace with first question or questions
-    $("#question").html(questions[0].question1 + " <hr><br>" + questions[0].answerChoices1);
-    
-   
     run();
     decrement();
+    //Will add function to start the game
+    //gameStart()
+}
+    document.getElementById("startOver").addEventListener("click", myFunction);
+    function resetBtn(){
+        var resetBtn = document.getElementById("startOver");
+        if (resetBtn.style.display === "none") {
+            resetBtn.style.display = "block";
+        } else {
+            reset.Btn.style.display = "none";
+        }
     
-}   
+    //here will add function to start the game and restart the game
+    //gameSTart()
+
+
+    }
+    //this is just a test, i will replace with first question or questions
+    // $("#question").html(questions[0].question1 + " <hr><br>" + questions[0].answerChoices1);
+    
+   
+    
+    
+  
