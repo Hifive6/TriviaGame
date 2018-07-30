@@ -6,16 +6,24 @@ var questions = [{
     answer: 0,
 },{
 
-    question: ["What is the name of the primary protangist of the God of War Series?", "Kratos"],
+    question: ["What is the name of the primary protangist of the God of War Series?"],
     answerChoices: ["Zeus ", " Atreus ", " Kratos", " Ares"],
     answer: 2,
 },{
-    question: ["In the war game Homefront, who is the enemy Country?", "North Korea"],
+    question: ["In the war game Homefront, who is the enemy Country?"],
     answerChoices: ["Russia ", " North Korea ", " China", " Iran"],
     answer: 1,
    
 }
 ];
+
+var resultMessages = {
+    correct: "You are Correct, Yay!",
+    incorrect: "You are Incorrect, Sorry",
+    endTime: "You have run out of time",
+    finish: "Ok, That is all the question, lets see how you did!"
+
+}
 
  
 
@@ -40,18 +48,18 @@ function startGame() {
 function run(){
     clearInterval(intervalId);
     intervalID = setInterval(decrement, 1000 + 1);
+    userAnswer = true
 }
 function decrement(){
     time--;
     $("#counter").html("<h1>" + time + "<h1>");
-    if(time === 0){
-        stop(),
+    if(time < 1){
+        clearInterval(intervalID);
+        userAnswer = false
         alert ("next Question");
     }
 
-    function stop(){
-        clearInterval(intervalID);
-    }
+  
 }   
 
  
@@ -78,7 +86,7 @@ function myFunction() {
         if (resetBtn.style.display === "none") {
             resetBtn.style.display = "block";
         } else {
-            reset.Btn.style.display = "none";
+            resetBtn.style.display = "none";
         }
     
     //here will add function to start the game and restart the game
@@ -86,34 +94,64 @@ function myFunction() {
      }
 
     //This fuction will create a new question when one is answered 
-     function createQuestion(){
-         document.getElementById("message").innerHTML = "";
-         document.getElementById("correctAnswer").innerHTML = "";
-         answer = true;
+     //function createQuestion(){
+       //  document.getElementById("message").innerHTML = "";
+         //document.getElementById("correctAnswer").innerHTML = "";
+         //answer = true;
         
 
-     }
+     //}
 
      $("#activeQuestion").html("Question # " + (activeQuestion +1) + " / " + questions.length);
      $(".question").html("<h2>" + questions[activeQuestion].question + "<h2>");
 
      //This loop will loop through the answers and create each answer as a way to pick the answer by picking the answer.
      for (var  i = 0; i < 4; i++){
-         var userPick = $("<div>");
+         var userPick = $("<button>");
          userPick.text(questions[activeQuestion].answerChoices[i]);
-         console.log((questions[activeQuestion].answerChoices[i]))
-         userPick.attr("data-index" , i);
-         userPick.addClass("choice");
-         $(".answerChoices").append(userPick);
-         console.log(userPick);
          
-
-
+         userPick.attr("data-index" , i);
+         userPick.addClass("choice text-info");
+         $(".answerChoices").append(userPick);
 
      }
+     //this function now stops the timer when you push on an answer
+    $(".choice").on("click", function(){
+        selectAnswer = $(this).data("index");
+        console.log(selectAnswer);
+        clearInterval(intervalID);    
+    })
 
 
+    function pageLayout(){
+        clearQuestion()
+        $("#activeQuestion").empty();
+        $(".thisChoice").empty();
+        $(".question").empty();
 
+        var rightAnswers = questions[activeQuestion].answer;
+        console.log(rightAnswers);
+
+        if ((userPick == rightAnswers) && (userAnswer = true)){
+            correct++;
+            $("#message").html(resultMessages.correct);
+
+        } else if ((userPick != rightAnswers) && (userAnswer = false)){
+            incorrect++;
+            $("#message").html(resultMessages.incorrect);
+        }else{
+            unanswered++;
+            $("#message").html(resultMessages.endTime);
+        }
+
+
+        if(activeQuestion == (questions.length - 1)){
+            //I have to set something up here so when all questions are answered the results page come out.
+        }else{
+            activeQuestion++;
+            //I have to add something here dont know what though
+        }
+    };
 
 
 
