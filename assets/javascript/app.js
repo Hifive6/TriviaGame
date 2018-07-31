@@ -21,40 +21,43 @@ var resultMessages = {
     correct: "You are Correct, Yay!",
     incorrect: "You are Incorrect, Sorry",
     endTime: "You have run out of time",
-    finish: "Ok, That is all the question, lets see how you did!"
+    finish: "Ok, That is all the questions, lets see how you did!"
 
 }
 
  
 
 //These are the variable that will hold my answers and time limit
-var time = 21;
+var answered;
 var correct;
 var wrong;
 var unanswered;
 var intervalId;
 var activeQuestion = 0;
-var selectAnswer;
+var selectAnswer = 0;
 var userPick;
 var userAnswer;
-
+var rightAnswers;
 
 
 
 
 //Created a counter for my questions
 function run(){
-    clearInterval(intervalId);
+    time = 21;
+    $("#counter").html("<h1>" + time + "<h1>");
+    //clearInterval(intervalId);
     intervalID = setInterval(decrement, 1000 + 1);
-    //userAnswer = true
+    answered = true
 }
 function decrement(){
     time--;
     $("#counter").html("<h1>" + time + "<h1>");
     if(time < 1){
         clearInterval(intervalID);
+        answered = false
         newQuestion();
-       //userAnswer = false
+       //selectAnswer = false
        // alert ("next Question");
         
     }
@@ -98,7 +101,7 @@ function myFunction() {
         correct = 0;
         wrong = 0;
         unanswered = 0;
-       activeQuestion = 0;
+       activeQuestion =0;
         $("#endingMessage").empty();
         $("#correct").empty();
         $("#wrong").empty();
@@ -113,7 +116,7 @@ function myFunction() {
      function newQuestion(){
          document.getElementById("message").innerHTML = "";
          document.getElementById("correctAnswer").innerHTML = "";
-         answer = true;
+         //selectAnswer = true;
 
      $("#activeQuestion").html("Question # " + (activeQuestion +1) + " / " + questions.length);
      $(".question").html("<h2>" + questions[activeQuestion].question + "<h2>");
@@ -134,6 +137,7 @@ function myFunction() {
         console.log(selectAnswer);
         clearInterval(intervalID);   
         pageLayout(); 
+        
     })
 }
 
@@ -144,33 +148,35 @@ function myFunction() {
         $(".question").empty();
         $(".answerChoices").empty();
 
-        var rightAnswers = questions[activeQuestion].answer;
+        rightAnswers = questions[activeQuestion].answer;
+        
         console.log(rightAnswers);
     
 
-        if ((selectAnswer === rightAnswers)){ //&& (userAnswer === true)){
+        if (selectAnswer === rightAnswers){
             correct++;
             $("#message").html(resultMessages.correct);
             newQuestion();
 
-        } else if ((selectAnswer != rightAnswers)){ //&& (userAnswer === false)){
+        } else if (selectAnswer != rightAnswers){ 
             wrong++;
             $("#message").html(resultMessages.incorrect);
             newQuestion();
         }else{
             unanswered++;
             $("#message").html(resultMessages.endTime);
+            newQuestion();
         }
     
 
-        if(activeQuestion === (questions.length - 1)){
-            setTimeout(endScore, 5000);
+        // if(activeQuestion === (questions.length - 1)){
+            // setTimeout(endScore, 5000);
             //I have to set something up here so when all questions are answered the results page come out.
-        }else{
-            activeQuestion++;
-            setTimeout(newQuestion, 5000);
+        // }else{
+            // activeQuestion++;
+            // setTimeout(newQuestion, 5000);
             //I have to add something here dont know what though
-        }
+        // }
     
     }
     
