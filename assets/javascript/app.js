@@ -35,28 +35,28 @@ var unanswered;
 var intervalId;
 var activeQuestion = 0;
 var selectAnswer;
+var userPick;
+var userAnswer;
 
 
 
-//This function will start my game
-function startGame() {
 
-
-};
 
 //Created a counter for my questions
 function run(){
     clearInterval(intervalId);
     intervalID = setInterval(decrement, 1000 + 1);
-    userAnswer = true
+    //userAnswer = true
 }
 function decrement(){
     time--;
     $("#counter").html("<h1>" + time + "<h1>");
     if(time < 1){
         clearInterval(intervalID);
-        userAnswer = false
-        alert ("next Question");
+        newQuestion();
+       //userAnswer = false
+       // alert ("next Question");
+        
     }
 
   
@@ -77,9 +77,10 @@ function myFunction() {
     }
     run();
     decrement();
-    //Will add function to start the game
-    //startGame()
+
+    startGame();
 }
+
     document.getElementById("startOver").addEventListener("click", resetBtn);
     function resetBtn(){
         var resetBtn = document.getElementById("startOver");
@@ -87,78 +88,103 @@ function myFunction() {
             resetBtn.style.display = "block";
         } else {
             resetBtn.style.display = "none";
+            
+            
         }
-    
+        startGame();
+    }
     //here will add function to start the game and restart the game
-    //startGame()
+    function startGame(){
+        correct = 0;
+        wrong = 0;
+        unanswered = 0;
+       activeQuestion = 0;
+        $("#endingMessage").empty();
+        $("#correct").empty();
+        $("#wrong").empty();
+        $("#unanswered").empty();
+         newQuestion();
      }
 
-    //This fuction will create a new question when one is answered 
-     //function createQuestion(){
-       //  document.getElementById("message").innerHTML = "";
-         //document.getElementById("correctAnswer").innerHTML = "";
-         //answer = true;
+    
         
 
-     //}
+     
+     function newQuestion(){
+         document.getElementById("message").innerHTML = "";
+         document.getElementById("correctAnswer").innerHTML = "";
+         answer = true;
 
      $("#activeQuestion").html("Question # " + (activeQuestion +1) + " / " + questions.length);
      $(".question").html("<h2>" + questions[activeQuestion].question + "<h2>");
 
      //This loop will loop through the answers and create each answer as a way to pick the answer by picking the answer.
      for (var  i = 0; i < 4; i++){
-         var userPick = $("<button>");
+         userPick = $("<button>");
          userPick.text(questions[activeQuestion].answerChoices[i]);
          
          userPick.attr("data-index" , i);
          userPick.addClass("choice text-info");
          $(".answerChoices").append(userPick);
-
+         
      }
      //this function now stops the timer when you push on an answer
     $(".choice").on("click", function(){
         selectAnswer = $(this).data("index");
         console.log(selectAnswer);
-        clearInterval(intervalID);    
+        clearInterval(intervalID);   
+        pageLayout(); 
     })
-
+}
 
     function pageLayout(){
-        clearQuestion()
+        //clearQuestion()
         $("#activeQuestion").empty();
         $(".thisChoice").empty();
         $(".question").empty();
+        $(".answerChoices").empty();
 
         var rightAnswers = questions[activeQuestion].answer;
         console.log(rightAnswers);
+    
 
-        if ((userPick == rightAnswers) && (userAnswer = true)){
+        if ((selectAnswer === rightAnswers)){ //&& (userAnswer === true)){
             correct++;
             $("#message").html(resultMessages.correct);
+            newQuestion();
 
-        } else if ((userPick != rightAnswers) && (userAnswer = false)){
-            incorrect++;
+        } else if ((selectAnswer != rightAnswers)){ //&& (userAnswer === false)){
+            wrong++;
             $("#message").html(resultMessages.incorrect);
+            newQuestion();
         }else{
             unanswered++;
             $("#message").html(resultMessages.endTime);
         }
+    
 
-
-        if(activeQuestion == (questions.length - 1)){
+        if(activeQuestion === (questions.length - 1)){
+            setTimeout(endScore, 5000);
             //I have to set something up here so when all questions are answered the results page come out.
         }else{
             activeQuestion++;
+            setTimeout(newQuestion, 5000);
             //I have to add something here dont know what though
         }
+    
+    }
+    
+
+    
+
+    function endScore(){
+        $("#counter").empty();
+        $("#message").empty();
+        $("#correctAnswer").empty();
+        
+        $("#endingMessage").html(resultMessages.finish);
+        $("#correct").html("Correct Answers " + correct);
+        $("#wrong").html("IncorrectAnswers " + wrong);
+        $("#unanswered").html("Questions Unanswered "+ unanswered);
     };
-
-
-
-    //this is just a test, i will replace with first question or questions
-    // $("#question").html(questions[0].question1 + " <hr><br>" + questions[0].answerChoices1);
-    
-   
-    
-    
-  
+    //I will append all my scores here when the game ends 
